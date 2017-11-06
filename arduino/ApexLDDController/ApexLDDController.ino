@@ -3,6 +3,41 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
+
+#define channel1 0
+#define channel2 1
+
+struct LedPuck {
+  byte c1;
+  byte c2;
+  byte c3;
+  byte c4;
+  byte c5;
+  byte c6;
+};
+
+// Maps the 
+const LedPuck lightPresets[] = {
+  {1,2,3,4,5,6}, // 1
+  {2,3,4,5,6,7}, // 2
+  {2,3,4,5,6,7}, // 3
+  {2,3,4,5,6,7}, // 4
+  {2,3,4,5,6,7}, // 5
+  {2,3,4,5,6,7}, // 6
+  {2,3,4,5,6,7}, // 7
+  {2,3,4,5,6,7}, // 8
+  {2,3,4,5,6,7}, // 9
+  {2,3,4,5,6,7}  // 10
+};
+
+
+// Maps the pins for each puck
+const LedPuck channelConfigurations[] = {
+  {0,1,2,3,4,5}, // Channel 1
+  {6,7,8,9,10,11}  // Challen 2
+};
+
+
 Adafruit_SSD1306 display(4);
 
 int channel1Color = A0;
@@ -124,7 +159,7 @@ void loop() {
 //    display.print(getReading(channel2Color));
   display.println("%");
   display.print("Channel 4:   ");
-  display.print(analogRead(channel2Intensity));
+  display.print(getChannelPrecentage(analogRead(channel2Intensity)));
 //    display.print(getReading(channel2Intensity));
   display.println("%");
   display.display();
