@@ -1,5 +1,9 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+Adafruit_SSD1306 display(4);
 
 int channel1Color = A0;
 int channel1Intensity = A1;
@@ -20,14 +24,29 @@ int average = 0;                // the average
 
 int tmpValue = 0;
 
-int inputPin = A0;
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
-
   pwm.begin();
   pwm.setPWMFreq(1600);  // This is the maximum PWM frequency
+
+  // Set up display
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.display();
+  delay(2000);
+
+  // Clear the buffer.  
+  display.clearDisplay();
+
+    // draw a single pixel
+    display.drawPixel(10, 10, WHITE);
+  // Show the display buffer on the hardware.
+  // NOTE: You _must_ call display after making any drawing commands
+  // to make them visible on the display hardware!
+  display.display();
+  delay(2000);
+  display.clearDisplay();
+  
 
   // save I2C bitrate
   uint8_t twbrbackup = TWBR;
@@ -40,11 +59,18 @@ void setup() {
   }
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+int getReading(int inputPin) {
+
+
+ readIndex = 0;              // the index of the current reading
+ total = 0;                  // the running total
+ average = 0;                // the average
+
+ tmpValue = 0;
+   // put your main code here, to run repeatedly:
 
    // subtract the last reading:
-  total = total - readings[readIndex];
+   total = total - readings[readIndex];
   // read from the sensor:
   readings[readIndex] = analogRead(inputPin);
   // add the reading to the total:
@@ -59,14 +85,51 @@ void loop() {
   }
 
   // calculate the average:
-  average = total / numReadings;
+  return (total / numReadings);
   // send it to the computer as ASCII digits
+}
+void loop() {
+
+  int i = 540;
+  i = map(i, 1023, 0, 100, 0);
+
+
+ 
   
   tmpValue = map(average, 130, 1023, 0, 4096);
-  Serial.println(average);
 //  pwm.setPWM(0, 0, tmpValue );
   delay(1);        // delay in between reads for stability
 
+
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE, BLACK);
+  display.setCursor(0,0);
+  display.println("LDD Convertor Test");
+  display.setCursor(0,9);
+  display.print("Channel 1:   ");
+    display.print(analogRead(channel1Color));
+
+//  display.print(getReading(channel1Color));
+  display.println("%");
+  display.print("Channel 2:   ");
+    display.print(analogRead(channel1Intensity));
+
+//    display.print(getReading(channel1Intensity));
+  display.println("%");
+  display.print("Channel 3:   ");
+    display.print(analogRead(channel2Color));
+
+//    display.print(getReading(channel2Color));
+  display.println("%");
+  display.print("Channel 4:   ");
+  display.print(analogRead(channel2Intensity));
+//    display.print(getReading(channel2Intensity));
+  display.println("%");
+  display.display();
+
+  
 // Set 1
   pwm.setPWM(0, 0, 4096 );       // Channel 1 (Red) 
   pwm.setPWM(1, 0, 4096 );       // Channel 2 (Royal Blue or some other blue....)
@@ -76,7 +139,7 @@ void loop() {
   pwm.setPWM(5, 0, 4096 );      // Green
 
    // Set 2
-  pwm.setPWM(6, 0, 4096 );
+   pwm.setPWM(6, 0, 4096 );
   pwm.setPWM(7, 0, 4096 ); // not working
   pwm.setPWM(8, 0, 4096 );  // Channel 1
   pwm.setPWM(9, 0, 4096 ); // Channel 2
@@ -89,9 +152,8 @@ void loop() {
   pwm.setPWM(15, 0, 4096 );
 
 
-
-    pwm.setPWM(10, 0, 4096 );
-    delay(100);
-      pwm.setPWM(10, 0, 4095 );
-      delay(100);
+  pwm.setPWM(10, 0, 4096 );
+  delay(100);
+  pwm.setPWM(10, 0, 4095 );
+  delay(100);
 }
