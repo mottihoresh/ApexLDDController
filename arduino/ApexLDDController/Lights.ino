@@ -24,7 +24,7 @@ int getIntensityLevel(int channelValue) {
 }
 
 int getColorIndex(int channelValue){
-  return map(channelValue, 0, 4095, 0, 9);
+  return map(channelValue, 0, 4095, 0, numberOfPresets-1);
 }
 
 struct LedPuck getColorMapping(int channelValue) {

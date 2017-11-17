@@ -8,31 +8,33 @@
 #define channel2 1
 
 struct LedPuck {
-  byte c1;
-  byte c2;
-  byte c3;
-  byte c4;
-  byte c5;
-  byte c6;
+  byte uv;  // UV Channel
+  byte rb;  // Royal Blue Channel
+  byte b;   // Blue Channel
+  byte w;   // Cool White Channel
+  byte g;   // Green Channel
+  byte r;   // Red Channel
 };
 
-// Maps the 
+#define numberOfPresets 10
+// Light presets.
 const LedPuck lightPresets[] = {
-  {1,2,3,4,5,6}, // 1
-  {2,3,4,5,6,7}, // 2
-  {2,3,4,5,6,7}, // 3
-  {2,3,4,5,6,7}, // 4
-  {2,3,4,5,6,7}, // 5
-  {2,3,4,5,6,7}, // 6
-  {2,3,4,5,6,7}, // 7
-  {2,3,4,5,6,7}, // 8
-  {2,3,4,5,6,7}, // 9
-  {2,3,4,5,6,7}  // 10
+  {17,17,17,37,100,100},      // 5K
+  {68,68,68,87,100,100},      // 7K
+  {87,87,87,100,100,100},     // 10K
+  {100,100,100,100,100,100},  // 12K
+  {100,100,100,45,45,45},     // 14K
+  {100,100,100,25,25,25},     // 18K
+  {100,100,100,17,17,17},     // 20K
+  {50,100,0,0,0,45},          // POLYP FLUORESCNESE
+  {100,100,100,10,15,35},     // CORAL RADIANCE
+  {100,100,100,0,0,50}        // REEF CREATIONS
 };
 
 
-// Maps the pins for each puck
+// Maps the pins for each puck.
 const LedPuck channelConfigurations[] = {
+  //{uv,rb,b,w,g,r}
   {0,1,2,3,4,5}, // Channel 1
   {6,7,8,9,10,11}  // Challen 2
 };
@@ -166,20 +168,20 @@ void loop() {
 
   
 // Set 1
-  pwm.setPWM(0, 0, 4096 );       // Channel 1 (Red) 
-  pwm.setPWM(1, 0, 4096 );       // Channel 2 (Royal Blue or some other blue....)
-  pwm.setPWM(2, 0, 4096 );      // Channel 3 (Maybe Royal Blue again...)
-  pwm.setPWM(3, 0, 4096 );      // Channel 4 (Cool white)
-  pwm.setPWM(4, 0, 4096 );      // Channel 5 (UV or maybe indigo)
-  pwm.setPWM(5, 0, 4096 );      // Green
+  pwm.setPWM(0, 0, 0 );       // Channel 1 (Red) 
+  pwm.setPWM(1, 0, 0 );       // Channel 2 (Royal Blue or some other blue....)
+  pwm.setPWM(2, 0, 0 );      // Channel 3 (Maybe Royal Blue again...)
+  pwm.setPWM(3, 0, 1000 );      // Channel 4 (Cool white)
+  pwm.setPWM(4, 0, 4095 );      // Channel 5 (UV or maybe indigo)
+  pwm.setPWM(5, 0, 0 );      // Green
 
    // Set 2
-   pwm.setPWM(6, 0, 4096 );
-  pwm.setPWM(7, 0, 4096 ); // not working
-  pwm.setPWM(8, 0, 4096 );  // Channel 1
-  pwm.setPWM(9, 0, 4096 ); // Channel 2
-  pwm.setPWM(10, 0, 4096 ); // Channel 3
-  pwm.setPWM(11, 0, 4096 ); 
+   pwm.setPWM(6, 0, 0 );
+  pwm.setPWM(7, 0, 0 ); // not working
+  pwm.setPWM(8, 0, 0 );  // Channel 1
+  pwm.setPWM(9, 0, 1000 ); // Channel 2
+  pwm.setPWM(10, 0, 4095 ); // Channel 3
+  pwm.setPWM(11, 0, 0 ); 
   
   pwm.setPWM(12, 0, 4096 );
   pwm.setPWM(13, 0, 4096 );
@@ -187,8 +189,4 @@ void loop() {
   pwm.setPWM(15, 0, 4096 );
 
 
-  pwm.setPWM(10, 0, 4096 );
-  delay(100);
-  pwm.setPWM(10, 0, 4095 );
-  delay(100);
 }
